@@ -1,0 +1,75 @@
+services:
+  mvp-api:
+    container_name: mvp-api
+    image: mvp-api
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development # Only will build development stage from our dockerfile
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - ${PORT}:${PORT}
+    networks:
+      - mvp-intranet
+    env_file:
+      - .env # Available inside container not in compose file
+    environment:
+      - DB_HOST=mvp-mysql
+      - REDIS_HOST=mvp-redis
+    depends_on:
+      mvp-mysql:
+        condition: service_healthy
+      mvp-redis:
+        condition: service_healthy
+    command: npm run start:dev # Run in development mode
+
+  mvp-mysql:
+    container_name: mvp-mysql
+    image: mysql:8.0
+    restart: unless-stopped
+    volumes:
+      - mysql:/var/lib/mysql
+    ports:
+      - 3307:${DB_PORT}
+    networks:
+      - mvp-intranet
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      TZ: 'utc'
+    command: --default-authentication-plugin=caching_sha2_password
+    healthcheck:
+      test: ['CMD', 'mysqladmin', '-u${DB_USER}', '-p${DB_PASSWORD}', 'ping']
+      interval: 5s
+      retries: 3
+      timeout: 3s
+
+  mvp-redis:
+    container_name: mvp-redis
+    image: redis:alpine
+    restart: unless-stopped
+    volumes:
+      - redis:/data
+    ports:
+      - 6380:${REDIS_PORT}
+    networks:
+      - mvp-intranet
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      retries: 3
+      timeout: 3s
+
+volumes:
+  mysql:
+    name: mvp-mysql
+  redis:
+    name: mvp-redis
+
+networks:
+  mvp-intranet:
+    name: mvp-intranet
+    driver: bridge
