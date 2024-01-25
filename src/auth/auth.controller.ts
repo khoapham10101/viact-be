@@ -1,4 +1,11 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  UnauthorizedException,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -42,8 +49,14 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Public()
   @Post('sign-in')
-  signIn(@Body() signInDto: SignInDto): Promise<{ accessToken: string }> {
-    return this.authService.signIn(signInDto);
+  async signIn(@Body() signInDto: SignInDto): Promise<{ accessToken: string }> {
+    const user = await this.authService.signIn(signInDto);
+
+    if (user.isVerify) {
+      return { accessToken: user.accessToken };
+    } else {
+      throw new UnauthorizedException('Please Check Email and Verify Account');
+    }
   }
 
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })

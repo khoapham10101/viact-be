@@ -9,11 +9,11 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { AuthService } from '../../../src/auth/auth.service';
 import { BcryptService } from '../../../src/auth/bcrypt.service';
 import { RedisService } from '../../../src/redis/redis.service';
-import jwtConfig from '../../../src/common/config/jwt.config';
 import { User } from '../../../src/users/entities/user.entity';
 import { SignUpDto } from '../../../src/auth/dto/sign-up.dto';
 import { MysqlErrorCode } from '../../../src/common/enums/error-codes.enum';
 import { ActiveUserData } from '../../../src/common/interfaces/active-user-data.interface';
+import { jwtConfig } from 'src/common/config/jwt.config';
 
 describe('AuthService', () => {
   let authService: AuthService;

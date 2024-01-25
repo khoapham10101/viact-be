@@ -7,7 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import { JwtAuthGuard } from '../../../../src/auth/guards/jwt-auth.guard';
 import { RedisService } from '../../../../src/redis/redis.service';
-import jwtConfig from '../../../../src/common/config/jwt.config';
+import { jwtConfig } from 'src/common/config/jwt.config';
 
 describe('JwtAuthGuard', () => {
   let guard: JwtAuthGuard;
