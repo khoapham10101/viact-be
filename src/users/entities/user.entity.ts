@@ -40,6 +40,10 @@ export class User {
   @Exclude({ toPlainOnly: true })
   password: string;
 
+  @ApiProperty({ description: 'Verification status of user', default: false })
+  @Column({ default: false })
+  isVerify: boolean;
+
   @ApiProperty({ description: 'Created date of user' })
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

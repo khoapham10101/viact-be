@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, TokenExpiredError } from '@nestjs/jwt';
 import { Request } from 'express';
 
-import jwtConfig from '../../common/config/jwt.config';
+import { jwtConfig } from '../../common/config/jwt.config';
 import { REQUEST_USER_KEY } from '../../common/constants';
 import { ActiveUserData } from '../../common/interfaces/active-user-data.interface';
 import { RedisService } from '../../redis/redis.service';
@@ -56,6 +56,9 @@ export class JwtAuthGuard implements CanActivate {
 
       request[REQUEST_USER_KEY] = payload;
     } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        throw new UnauthorizedException('Authorization token has expired');
+      }
       throw new UnauthorizedException(error.message);
     }
 
@@ -63,7 +66,12 @@ export class JwtAuthGuard implements CanActivate {
   }
 
   private getToken(request: Request) {
-    const [_, token] = request.headers.authorization?.split(' ') ?? [];
+    const authorizationHeader = request.headers.authorization;
+    const urlToken = request.query.token as string;
+    const token = authorizationHeader
+      ? authorizationHeader.split(' ')[1]
+      : urlToken;
+
     return token;
   }
 }
