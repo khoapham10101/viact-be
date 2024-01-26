@@ -25,8 +25,8 @@ export class MailService {
           verificationLink,
       html:
         additionalData ? additionalData.message +
-          '</p><a href="' + verificationLink + '">Verify Email</a>' :
-          '<p>Please verify your email by clicking the following link:</p><a href="' +
+          '</p><a href="http://' + verificationLink + '">Verify Email</a>' :
+          '<p>Please verify your email by clicking the following link:</p><a href="http://' +
           verificationLink +
           '">Verify Email</a>',
     });

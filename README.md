@@ -1,9 +1,5 @@
 # MVP BE
-
-![Workflow Test](https://github.com/anilahir/nestjs-authentication-and-authorization/actions/workflows/ci.yml/badge.svg)
-![Prettier](https://img.shields.io/badge/Code%20style-prettier-informational?logo=prettier&logoColor=white)
-[![GPL v3 License](https://img.shields.io/badge/License-GPLv3-green.svg)](./LICENSE)
-[![HitCount](https://hits.dwyl.com/anilahir/nestjs-authentication-and-authorization.svg)](https://hits.dwyl.com/anilahir/nestjs-authentication-and-authorization)
+## Node version >= 18
 
 ## Description
 
@@ -61,9 +57,9 @@ $ npm run docker:up
 $ npm run docker:down
 ```
 
-## Swagger documentation
+## Swagger documentation / API document
 
-- [localhost:3000/docs](http://localhost:3000/docs)
+- {HOST}/docs
 
 ## License
 
