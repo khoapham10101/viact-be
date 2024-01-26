@@ -12,7 +12,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { TokenDto } from './dto/token.dto';
 
 @ApiTags('Authentication')
-@Controller('verification')
+@Controller('auth/verification')
 export class VerificationController {
   constructor(
     private readonly userService: UsersService,
