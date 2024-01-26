@@ -1,0 +1,23 @@
+name: Deploy to Staging Server
+
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+  
+jobs:
+  run_pull:
+    name: Deploy code in Staging site
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install ssh keys
+      run: |
+        install -m 600 -D /dev/null ~/.ssh/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY_STAGING }}" > ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+    - name: Connect and Pull
+      run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && git checkout . && git checkout ${{ secrets.BRANCH_STAGING }} && git pull && exit"
