@@ -40,6 +40,24 @@ export class User {
   @Exclude({ toPlainOnly: true })
   password: string;
 
+  @ApiProperty({
+    description: 'Phone Number of user',
+  })
+  @Column({ nullable: true })
+  phoneNumber: string;
+
+  @ApiProperty({
+    description: 'Phone Number of user',
+  })
+  @Column({ nullable: true })
+  avatarUrl: string;
+
+  @ApiProperty({
+    description: 'Phone Number of user',
+  })
+  @Column({ nullable: true })
+  address: string;
+
   @ApiProperty({ description: 'Verification status of user', default: false })
   @Column({ default: false })
   isVerify: boolean;

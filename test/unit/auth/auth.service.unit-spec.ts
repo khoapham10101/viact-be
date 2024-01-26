@@ -59,6 +59,7 @@ describe('AuthService', () => {
       username: 'username',
       firstName: 'first name',
       lastName: 'last name',
+      phoneNumber: '',
     };
     let user: User;
 

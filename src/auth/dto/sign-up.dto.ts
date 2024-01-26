@@ -32,6 +32,12 @@ export class SignUpDto {
   readonly lastName: string;
 
   @ApiProperty({
+    example: '(+1) 9 123 54534',
+    description: 'Phone number of user',
+  })
+  readonly phoneNumber: string;
+
+  @ApiProperty({
     example: 'atest@email.com',
     description: 'Email of user',
   })

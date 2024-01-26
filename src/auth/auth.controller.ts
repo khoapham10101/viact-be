@@ -1,28 +1,22 @@
-import {
-  Controller,
-  Post,
-  Body,
-  HttpCode,
-  HttpStatus,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
-import { ActiveUser } from '../common/decorators/active-user.decorator';
 import { Public } from '../common/decorators/public.decorator';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { SignUpDto } from './dto/sign-up.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { SendEmailForgotPasswordDto } from '../mail/dto/send-email-forgot-password.dto';
+import { ActiveUser } from 'src/common/decorators/active-user.decorator';
 
-@ApiTags('auth')
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -49,20 +43,34 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Public()
   @Post('sign-in')
-  async signIn(@Body() signInDto: SignInDto): Promise<{ accessToken: string }> {
-    const user = await this.authService.signIn(signInDto);
-
-    if (user.isVerify) {
-      return { accessToken: user.accessToken };
-    } else {
-      throw new UnauthorizedException('Please Check Email and Verify Account');
-    }
+  signIn(@Body() signInDto: SignInDto) {
+    return this.authService.signIn(signInDto);
   }
 
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  @ApiOkResponse({ description: 'User has been successfully signed out' })
-  @ApiBearerAuth()
-  @HttpCode(HttpStatus.OK)
+  @ApiCreatedResponse({ description: 'Reset Password Successful' })
+  @ApiBadRequestResponse({
+    description: 'Return errors for invalid forgot password fields',
+  })
+  @ApiNoContentResponse({
+    description: 'Password reset email sent successfully',
+  })
+  @Public()
+  @Post('forgot-password')
+  forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(forgotPasswordDto);
+  }
+
+  @ApiCreatedResponse({ description: 'Send Email Forgot Password' })
+  @Public()
+  @Post('send-email-forgot-password')
+  requestEmailForgotPassword(
+    @Body() sendEmailForgotPasswordDto: SendEmailForgotPasswordDto,
+  ) {
+    return this.authService.requestEmailForgotPassword(
+      sendEmailForgotPasswordDto,
+    );
+  }
+
   @Post('sign-out')
   signOut(@ActiveUser('id') userId: string): Promise<void> {
     return this.authService.signOut(userId);

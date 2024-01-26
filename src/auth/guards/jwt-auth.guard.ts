@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  HttpStatus,
   Inject,
   Injectable,
   UnauthorizedException,
@@ -14,6 +15,7 @@ import { jwtConfig } from '../../common/config/jwt.config';
 import { REQUEST_USER_KEY } from '../../common/constants';
 import { ActiveUserData } from '../../common/interfaces/active-user-data.interface';
 import { RedisService } from '../../redis/redis.service';
+import { createResponse } from 'src/common/response/response.helper';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -25,7 +27,7 @@ export class JwtAuthGuard implements CanActivate {
     private reflector: Reflector,
   ) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  async canActivate(context: ExecutionContext): Promise<any> {
     const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [
       context.getHandler(),
       context.getClass(),
@@ -50,6 +52,7 @@ export class JwtAuthGuard implements CanActivate {
         `user-${payload.id}`,
         payload.tokenId,
       );
+
       if (!isValidToken) {
         throw new UnauthorizedException('Authorization token is not valid');
       }

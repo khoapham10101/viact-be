@@ -12,7 +12,10 @@ import {
 import { JwtCustomService } from 'src/jwt-custom/jwt-custom.service';
 import { UsersService } from 'src/users/users.service';
 import { Request } from 'express';
+import { createResponse } from 'src/common/response/response.helper';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Authentication')
 @Controller('verification')
 export class VerificationController {
   constructor(
@@ -25,12 +28,12 @@ export class VerificationController {
   async verifyEmail(
     @Query('token') token: string,
     @Req() request: Request,
-  ): Promise<{ url: string }> {
+  ): Promise<any> {
     const extractedToken = this.getToken(request);
 
     if (!extractedToken && !token) {
       // Handle case where token is not provided
-      return { url: '/login' };
+      return createResponse(HttpStatus.BAD_REQUEST, 'Token Extracted');
     }
 
     // Use the provided token if available, otherwise use the extracted token
@@ -45,10 +48,10 @@ export class VerificationController {
       await this.userService.updateIsVerify(email, true);
 
       // Return success response
-      return { url: '/' }; // Change the URL as needed
+      throw createResponse(HttpStatus.OK, 'Verification successful', { email });
     } catch (error) {
       // Handle verification error
-      throw new HttpException('Verification failed', HttpStatus.BAD_REQUEST);
+      throw createResponse(HttpStatus.BAD_REQUEST, 'Verification failed');
     }
   }
 

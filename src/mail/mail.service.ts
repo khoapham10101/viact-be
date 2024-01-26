@@ -3,7 +3,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class MailService {
-  constructor(private readonly mailerService: MailerService) {}
+  constructor(private readonly mailerService: MailerService) { }
 
   async sendVerificationEmail(
     email: string,
@@ -19,12 +19,16 @@ export class MailService {
         ...additionalData,
       },
       text:
-        'Please verify your email by clicking the following link: ' +
-        verificationLink,
+        additionalData ? additionalData.message +
+          verificationLink :
+          'Please verify your email by clicking the following link: ' +
+          verificationLink,
       html:
-        '<p>Please verify your email by clicking the following link:</p><a href="' +
-        verificationLink +
-        '">Verify Email</a>',
+        additionalData ? additionalData.message +
+          '</p><a href="' + verificationLink + '">Verify Email</a>' :
+          '<p>Please verify your email by clicking the following link:</p><a href="' +
+          verificationLink +
+          '">Verify Email</a>',
     });
   }
 }

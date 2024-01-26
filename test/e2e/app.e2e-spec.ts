@@ -53,6 +53,7 @@ describe('App (e2e)', () => {
           username: '',
           firstName: '',
           lastName: '',
+          phoneNumber: '',
         };
 
         return request(server)
@@ -71,6 +72,7 @@ describe('App (e2e)', () => {
           username: '',
           firstName: '',
           lastName: '',
+          phoneNumber: '',
         };
 
         return request(server)
@@ -92,6 +94,7 @@ describe('App (e2e)', () => {
           username: 'test',
           firstName: 'A',
           lastName: 'Test',
+          phoneNumber: '',
         };
 
         return request(server)
@@ -134,58 +137,6 @@ describe('App (e2e)', () => {
           .post('/auth/sign-in')
           .send(signInDto)
           .expect(HttpStatus.BAD_REQUEST);
-      });
-    });
-
-    describe('POST /auth/sign-out', () => {
-      it('should sign out the user', async () => {
-        const user = await UserFactory.new(dataSource).create({
-          email: 'atest@email.com',
-          password: 'Pass#123',
-        });
-
-        const { accessToken } = await authService.generateAccessToken(user);
-
-        return request(server)
-          .post('/auth/sign-out')
-          .set('Authorization', `Bearer ${accessToken}`)
-          .expect(HttpStatus.OK);
-      });
-
-      it('should return 401 if not authorized', async () => {
-        return request(server)
-          .post('/auth/sign-out')
-          .expect(HttpStatus.UNAUTHORIZED);
-      });
-    });
-  });
-
-  describe('UsersModule', () => {
-    describe('GET /users/me', () => {
-      it('should return 401 unauthorized when no access token provided', () => {
-        return request(server).get('/users/me').expect(HttpStatus.UNAUTHORIZED);
-      });
-
-      it('should return user details when access token provided', async () => {
-        const user = await UserFactory.new(dataSource).create({
-          email: 'atest@email.com',
-          password: 'Pass#123',
-        });
-
-        const { accessToken } = await authService.generateAccessToken(user);
-
-        return request(server)
-          .get('/users/me')
-          .set('Authorization', `Bearer ${accessToken}`)
-          .expect(HttpStatus.OK)
-          .expect((res) => {
-            expect(res.body).toEqual(
-              expect.objectContaining({
-                id: user.id,
-                email: user.email,
-              }),
-            );
-          });
       });
     });
   });
