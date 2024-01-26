@@ -50,7 +50,7 @@ export class AuthService {
       const token = await this.generateAccessToken(user);
 
       //Send Email after register
-      const verificationLink = `${this.frontend_url}?token=${token.accessToken}`;
+      const verificationLink = `${this.frontend_url}/verify-account?token=${token.accessToken}`;
       const additionalData = {
         message: 'Welcome to our platform!',
       };
@@ -101,7 +101,7 @@ export class AuthService {
       const tokenGenerate = await this.generateAccessToken(user);
 
       if (!user.isVerify) {
-        const verificationLink = `${this.frontend_url}?token=${tokenGenerate.accessToken}`;
+        const verificationLink = `${this.frontend_url}/verify-account?token=${tokenGenerate.accessToken}`;
         const additionalData = {
           message: 'Welcome to our platform!',
         };

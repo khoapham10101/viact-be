@@ -70,7 +70,7 @@ export class JwtAuthGuard implements CanActivate {
 
   private getToken(request: Request) {
     const authorizationHeader = request.headers.authorization;
-    const urlToken = request.query.token as string;
+    const urlToken = request.body.token as string;
     const token = authorizationHeader
       ? authorizationHeader.split(' ')[1]
       : urlToken;
