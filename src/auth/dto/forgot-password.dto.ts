@@ -18,9 +18,6 @@ export class ForgotPasswordDto {
     })
     @IsNotEmpty()
     @IsString()
-    @MinLength(8, {
-        message: 'Password should be at least 8 characters long',
-    })
     readonly newPassword: string;
 
     @ApiProperty({
@@ -29,9 +26,6 @@ export class ForgotPasswordDto {
     })
     @IsNotEmpty()
     @IsString()
-    @MinLength(8, {
-        message: 'Password should be at least 8 characters long',
-    })
     readonly confirmPassword: string;
 
 }

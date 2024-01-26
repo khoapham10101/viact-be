@@ -142,7 +142,7 @@ export class AuthService {
       const user = await this.userRepository.findOne({
         where: { id: decodedToken.id },
       } as FindOneOptions<User>);
-
+      
       if (!user) {
         return createResponse(HttpStatus.NOT_FOUND, 'User not found');
       }
@@ -165,6 +165,7 @@ export class AuthService {
 
       return createResponse(HttpStatus.OK, 'Password reset successful');
     } catch (error) {
+      
       if (error instanceof TokenExpiredError) {
         return createResponse(
           HttpStatus.UNAUTHORIZED,
