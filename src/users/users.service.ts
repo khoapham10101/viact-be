@@ -58,8 +58,8 @@ export class UsersService {
   async getListUser(getUsersDto: GetUsersDto) {
     try {
       const {
-        page = 1,
-        pageSize = 10,
+        page,
+        pageSize,
         searchTerm,
         sortBy,
         sortOrder,
@@ -68,8 +68,8 @@ export class UsersService {
       const order: 'ASC' | 'DESC' = sortOrder === 'desc' ? 'DESC' : 'ASC';
 
       const options: FindManyOptions<User> = {
-        take: pageSize,
-        skip: (page - 1) * pageSize,
+        take: pageSize || undefined,
+        skip: page ? (page - 1) * pageSize : 0,
         order: sortBy ? { [sortBy]: order } : undefined,
         where: searchTerm
           ? [
